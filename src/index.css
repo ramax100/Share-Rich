@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Global polish: consistent pointer, smooth micro-transitions everywhere. */
+button:not(:disabled),
+[role="button"],
+a {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Smooth, subtle transitions for interactive elements. */
+button,
+[role="button"],
+a,
+input {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gentle page entry (fade) — applied on the app root.
+   NOTE: this animation must NOT touch `transform`. A transform (even an identity one,
+   e.g. translateY(0)) on #root makes it the containing block for `position: fixed`
+   descendants. That caused every modal's backdrop to be sized to the whole document
+   instead of the phone viewport, so modals sat too low and overflowed the bottom edge. */
+@keyframes app-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+#root {
+  animation: app-enter 0.45s ease-out both;
+}
+
+/* Soft content rise for cards/sections on first paint. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-rise {
+  animation: rise-in 0.4s ease-out both;
+}
+
+/* Lighter, subtler scrollbars so the file list doesn't look heavy. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(236, 72, 153, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(236, 72, 153, 0.35);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
