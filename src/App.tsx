@@ -1065,11 +1065,11 @@ export default function App() {
                 }}
                 className={`rounded-2xl border p-2.5 text-left transition active:scale-[0.98] sm:p-4 ${
                   activeTab === 'receive'
-                    ? 'border-cyan-300 bg-cyan-50 shadow-lg shadow-cyan-100'
+                    ? 'border-cyan-400 bg-cyan-50 shadow-lg shadow-cyan-200/60'
                     : 'border-slate-200 bg-slate-50/50 hover:border-cyan-300 hover:bg-cyan-50'
                 }`}
               >
-                <div className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500 text-white shadow-lg shadow-cyan-100 sm:mb-3 sm:h-10 sm:w-10">
+                <div className="mb-1.5 flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-500 text-white shadow-lg shadow-cyan-200/60 sm:mb-3 sm:h-10 sm:w-10">
                   <Download className="h-4 w-4 sm:h-5 sm:w-5" />
                 </div>
                 <h2 className="text-sm font-black text-slate-900">Terima</h2>
