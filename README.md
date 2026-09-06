@@ -21,14 +21,12 @@ Aplikasi web berbasis **WebRTC** untuk mentransfer file (foto, video, dokumen, A
 - **⚡ Transfer P2P Langsung (WebRTC DataChannel)** — File dipindahkan langsung dari chip Wi-Fi perangkat satu ke perangkat lain. **Tidak pernah** diunggah / disimpan di cloud.
 - **🔗 Koneksi Lewat QR Code & PIN** — Dua perangkat bertemu lewat QR yang di-scan kamera, atau PIN Room 6 digit.
 - **📷 Scanner QR Real-Time** — Tombol *Kirim* langsung membuka kamera untuk memindai QR perangkat penerima.
-- **📡 Radar Wi-Fi Lokal** — Visual radar interaktif yang menampilkan perangkat lain di jaringan yang sama (avatar memakai posisi tetap & stabil, tidak bertukar).
-- **🎭 Profil Avatar Anime** — Setiap perangkat punya nama & avatar anime (Chibi) yang bisa diganti di menu Pengaturan.
-- **📊 Progress Transfer Animasi** — Modal kecepatan + "duel" avatar + pesawat kertas, progress bar, kecepatan (MB/s), dan ETA.
+- **📡 Radar Wi-Fi Lokal** — Menampilkan perangkat lain di jaringan yang sama, dengan posisi avatar yang tetap & stabil.
+- **📊 Progress Transfer** — Kecepatan (MB/s), ETA, dan progress bar real-time.
 - **🗄️ Riwayat & Brankas File** — Kumpulan file yang dikirim & diterima, dengan pratinjau dan tombol unduh ulang.
-- **📥 Auto-Download** — Saat transfer selesai, file otomatis masuk ke folder Download browser (dengan tombol unduh manual sebagai cadangan).
-- **🔔 Notifikasi Permintaan Masuk** — Layar *"Terima Perangkat"* & *"Terima File"* ala Bluetooth untuk konfirmasi yang disengaja.
-- **📶 Panduan Wi-Fi Direct / Hotspot** — Modal panduan memilih pita 5 GHz untuk kecepatan maksimal.
-- **🎊 Efek Confetti** — Perayaan saat transfer 100% selesai.
+- **📥 Auto-Download** — File otomatis masuk ke folder Download browser setelah selesai (tombol unduh manual sebagai cadangan).
+- **🔔 Konfirmasi Masuk** — Layar *"Terima Perangkat"* & *"Terima File"* untuk persetujuan yang disengaja.
+- **📶 Panduan Wi-Fi Direct / Hotspot** — Panduan memilih pita 5 GHz untuk kecepatan maksimal.
 - **📱 Responsif & Mobile-First** — UI flat putih/pink, rapi di HP maupun desktop, semua modal terpusat & bisa di-scroll.
 - **🧩 Anti Duplikat Kirim** — Pengaman double-tap agar file tidak terkirim dua kali.
 
