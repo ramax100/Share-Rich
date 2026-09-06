@@ -151,8 +151,8 @@ Share-Rich/
 ## 🔧 Konfigurasi Penting
 
 - **Chunk transfer & buffering** (`src/utils/webrtc.ts`): `CHUNK_SIZE = 256 KB`, `BATCH_READ_SIZE = 8 MB`, `BUFFER_CEILING = 8 MB`, `BUFFER_LOW_THRESHOLD = 2 MB` — tuning kecepatan transfer Wi-Fi.
-- **Identitas perangkat** tersimpan di `localStorage` (kunci `shareit_*`) sehingga tetap ada saat refresh, dan hanya direset lewat menu *Reset ID & Profil Perangkat*.
-- **Pop-up sambutan** hanya muncul sekali; bisa dihilangkan permanen lewat *"Jangan tampilkan lagi"* (kunci `shareit_welcome_dismissed`).
+- **Identitas perangkat** tersimpan di `localStorage` sehingga tetap ada saat refresh, dan hanya direset lewat menu *Reset ID & Profil Perangkat*.
+- **Pop-up sambutan** hanya muncul sekali; bisa dihilangkan permanen lewat *"Jangan tampilkan lagi"*.
 
 ---
 
