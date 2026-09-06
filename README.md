@@ -21,7 +21,6 @@ Aplikasi web berbasis **WebRTC** untuk mentransfer file (foto, video, dokumen, A
 - **⚡ Transfer P2P Langsung (WebRTC DataChannel)** — File dipindahkan langsung dari chip Wi-Fi perangkat satu ke perangkat lain. **Tidak pernah** diunggah / disimpan di cloud.
 - **🔗 Koneksi Lewat QR Code & PIN** — Dua perangkat bertemu lewat QR yang di-scan kamera, atau PIN Room 6 digit.
 - **📷 Scanner QR Real-Time** — Tombol *Kirim* langsung membuka kamera untuk memindai QR perangkat penerima.
-- **📡 Radar Wi-Fi Lokal** — Menampilkan perangkat lain di jaringan yang sama, dengan posisi avatar yang tetap & stabil.
 - **📊 Progress Transfer** — Kecepatan (MB/s), ETA, dan progress bar real-time.
 - **🗄️ Riwayat & Brankas File** — Kumpulan file yang dikirim & diterima, dengan pratinjau dan tombol unduh ulang.
 - **📥 Auto-Download** — File otomatis masuk ke folder Download browser setelah selesai (tombol unduh manual sebagai cadangan).
