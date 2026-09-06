@@ -150,15 +150,15 @@ export const RadarScanner: React.FC<RadarScannerProps> = ({
                 {peer.name}
               </span>
               {isConnected ? (
-                <span className="mt-1 inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-500/90 px-2 py-0.5 text-[9px] font-black text-white shadow-sm">
+                <span className="mt-1 inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-emerald-500/90 px-2 py-0.5 text-[11px] font-black text-white shadow-sm">
                   <Link2 className="h-3 w-3" /> Terhubung
                 </span>
               ) : isConnecting ? (
-                <span className="mt-1 inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-amber-400/90 px-2 py-0.5 text-[9px] font-black text-white shadow-sm">
+                <span className="mt-1 inline-flex items-center gap-1 whitespace-nowrap rounded-full bg-amber-400/90 px-2 py-0.5 text-[11px] font-black text-white shadow-sm">
                   <Loader2 className="h-3 w-3 animate-spin" /> Menghubung
                 </span>
               ) : (
-                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-black/20 px-2 py-0.5 text-[9px] font-bold">
+                <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-black/20 px-2 py-0.5 text-[11px] font-bold">
                   {getDeviceIcon(peer.deviceType)} Kirim
                 </span>
               )}

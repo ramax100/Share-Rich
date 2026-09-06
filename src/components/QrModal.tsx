@@ -301,7 +301,7 @@ export const QrModal: React.FC<QrModalProps> = ({
             <div className="w-full mt-4 p-3 rounded-2xl bg-pink-50 border border-pink-200 flex items-center justify-between">
               <div className="text-left">
                 <span className="text-[10px] text-slate-500 font-medium block">PIN Koneksi Cepat</span>
-                <span className="text-lg font-mono font-extrabold text-pink-400 tracking-wider">
+                <span className="text-lg font-mono font-extrabold text-pink-600 tracking-wider">
                   #{roomCode}
                 </span>
               </div>

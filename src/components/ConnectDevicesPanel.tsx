@@ -113,17 +113,17 @@ export const ConnectDevicesPanel: React.FC<ConnectDevicesPanelProps> = ({
                   <p className="truncate text-sm font-black text-slate-900">{peer.name}</p>
                   <div className="mt-0.5 flex items-center gap-1">
                     {isConnected && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-black text-white">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[11px] font-black text-white">
                         <Link2 className="h-3 w-3" /> Terhubung
                       </span>
                     )}
                     {isConnecting && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-black text-white">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-2 py-0.5 text-[11px] font-black text-white">
                         <Loader2 className="h-3 w-3 animate-spin" /> Menghubung
                       </span>
                     )}
                     {!isConnected && !isConnecting && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold text-slate-600">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-bold text-slate-600">
                         {getDeviceIcon(peer.deviceType)} Siap kirim
                       </span>
                     )}

@@ -130,7 +130,7 @@ export const RadarVisual: React.FC<RadarVisualProps> = ({
                 {peer.name}
               </span>
               {isConnected && (
-                <span className="mt-0.5 text-[8px] font-bold text-emerald-600">
+                <span className="mt-0.5 text-[10px] font-bold text-emerald-600">
                   Terhubung
                 </span>
               )}

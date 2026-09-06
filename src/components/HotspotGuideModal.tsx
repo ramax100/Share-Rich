@@ -50,18 +50,18 @@ export const HotspotGuideModal: React.FC<HotspotGuideModalProps> = ({ isOpen, on
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="p-2 rounded-xl bg-pink-50 border border-pink-200">
                 <span className="text-[10px] text-slate-500 block">Bluetooth Biasa</span>
-                <span className="text-xs font-bold text-rose-400 mt-0.5 block">1 - 2 Mbps</span>
-                <span className="text-[9px] text-slate-500 block">~0.2 MB/dtk</span>
+                <span className="text-xs font-bold text-rose-600 mt-0.5 block">1 - 2 Mbps</span>
+                <span className="text-[11px] text-slate-500 block">~0.2 MB/dtk</span>
               </div>
               <div className="p-2 rounded-xl bg-pink-50 border border-pink-200">
                 <span className="text-[10px] text-slate-500 block">Wi-Fi 2.4 GHz</span>
-                <span className="text-xs font-bold text-amber-400 mt-0.5 block">72 - 150 Mbps</span>
-                <span className="text-[9px] text-slate-500 block">~10-18 MB/dtk</span>
+                <span className="text-xs font-bold text-amber-600 mt-0.5 block">72 - 150 Mbps</span>
+                <span className="text-[11px] text-slate-500 block">~10-18 MB/dtk</span>
               </div>
               <div className="p-2 rounded-xl bg-white border border-pink-300">
                 <span className="text-[10px] text-pink-600 font-semibold block">Wi-Fi 5 GHz 🔥</span>
-                <span className="text-xs font-bold text-emerald-400 mt-0.5 block">300 - 867 Mbps</span>
-                <span className="text-[9px] text-pink-600 font-bold block">~40-100 MB/dtk!</span>
+                <span className="text-xs font-bold text-emerald-600 mt-0.5 block">300 - 867 Mbps</span>
+                <span className="text-[11px] text-pink-600 font-bold block">~40-100 MB/dtk!</span>
               </div>
             </div>
           </div>
