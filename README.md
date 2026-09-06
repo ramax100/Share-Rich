@@ -26,7 +26,6 @@ Aplikasi web berbasis **WebRTC** untuk mentransfer file (foto, video, dokumen, A
 - **📥 Auto-Download** — File otomatis masuk ke folder Download browser setelah selesai (tombol unduh manual sebagai cadangan).
 - **🔔 Konfirmasi Masuk** — Layar *"Terima Perangkat"* & *"Terima File"* untuk persetujuan yang disengaja.
 - **📶 Panduan Wi-Fi Direct / Hotspot** — Panduan memilih pita 5 GHz untuk kecepatan maksimal.
-- **📱 Responsif & Mobile-First** — UI flat putih/pink, rapi di HP maupun desktop, semua modal terpusat & bisa di-scroll.
 - **🧩 Anti Duplikat Kirim** — Pengaman double-tap agar file tidak terkirim dua kali.
 
 ---
