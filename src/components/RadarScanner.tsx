@@ -12,7 +12,6 @@ interface RadarScannerProps {
   onSelectPeer: (peer: Peer) => void;
   onRefresh: () => void;
   onOpenQrReceiver: () => void;
-  onAddVirtualPeer?: () => void;
 }
 
 export const RadarScanner: React.FC<RadarScannerProps> = ({

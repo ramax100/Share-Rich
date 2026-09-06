@@ -592,23 +592,6 @@ export default function App() {
     rtcManagerRef.current?.updateProfile(name, avatar);
   };
 
-  // Add Local Loopback Peer (Diagnostic test on single device)
-  const handleLoopbackTest = () => {
-    const loopbackProfile = getRandomDeviceProfile();
-    const loopbackPeer: Peer = {
-      id: `loopback-${Date.now()}`,
-      name: loopbackProfile.name,
-      avatar: loopbackProfile.avatar,
-      deviceType: 'mobile',
-      roomCode: roomCode,
-      wifiBand: '5 GHz',
-      signalStrength: 5,
-      distanceLevel: 1,
-    };
-    setPeers((prev) => [loopbackPeer, ...prev.filter((p) => !p.id.startsWith('loopback-'))]);
-    setSelectedPeer(loopbackPeer);
-  };
-
   // File handling
   const handleAddFiles = (newFiles: FileItem[]) => {
     setSelectedFiles((prev) => [...prev, ...newFiles]);
@@ -625,12 +608,6 @@ export default function App() {
   // Start Real Transfer Execution
   const handleStartTransfer = async () => {
     if (!selectedPeer || selectedFiles.length === 0) return;
-
-    // Check if loopback or virtual diagnostic test
-    if (selectedPeer.id.startsWith('loopback-') || selectedPeer.id.startsWith('virtual-')) {
-      simulateVirtualTransfer(selectedPeer, selectedFiles);
-      return;
-    }
 
     // Guard against a double-tap on "Kirim File": while a request is being sent, ignore
     // repeat calls so we never fire sendFileRequest twice for the same selection.
@@ -692,7 +669,6 @@ export default function App() {
   // show up. Forces a fresh connection + re-sends the file-request.
   const handleRetryTransfer = () => {
     if (!selectedPeer || selectedFiles.length === 0) return;
-    if (selectedPeer.id.startsWith('loopback-') || selectedPeer.id.startsWith('virtual-')) return;
     // Guard against a double-tap on "Hubungkan Ulang" firing two retry notifications.
     if (startingTransferRef.current) return;
     startingTransferRef.current = true;
@@ -719,150 +695,6 @@ export default function App() {
 
     // Re-trigger the notification on the receiver.
     rtcManagerRef.current?.retrySendFileRequest(selectedPeer, selectedFiles);
-  };
-
-  // Virtual demo transfer simulator (renders exact 5GHz Wi-Fi transmission with speedometer)
-  const simulateVirtualTransfer = (targetPeer: Peer, files: FileItem[]) => {
-    const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
-    let transferred = 0;
-    const startTime = Date.now();
-
-    // Start with brief waiting state to show connection handshake
-    const initialSession: ActiveTransferSession = {
-      sessionId: generateId(),
-      peerId: targetPeer.id,
-      peerName: targetPeer.name,
-      peerAvatar: targetPeer.avatar,
-      direction: 'sending',
-      status: 'waiting',
-      files,
-      currentFileIndex: 0,
-      transferredBytes: 0,
-      totalBytes,
-      currentSpeedBytes: 0,
-      peakSpeedBytes: 0,
-      elapsedSeconds: 0,
-      etaSeconds: 0,
-      connectionType: 'WebRTC Direct P2P (Wi-Fi Local)',
-    };
-
-    setActiveSession(initialSession);
-
-    setTimeout(() => {
-      // Transition to transferring state
-      setActiveSession((prev) =>
-        prev
-          ? {
-              ...prev,
-              status: 'transferring',
-              currentSpeedBytes: 48 * 1024 * 1024,
-              peakSpeedBytes: 65 * 1024 * 1024,
-            }
-          : null
-      );
-
-      const interval = setInterval(() => {
-        // Transfer ~8-12MB per tick (200ms) = ~45-60MB/s Wi-Fi speed!
-        const chunk = Math.min(
-          totalBytes - transferred,
-          Math.floor(7 * 1024 * 1024 + Math.random() * 5 * 1024 * 1024)
-        );
-        transferred += chunk;
-
-        const elapsed = (Date.now() - startTime) / 1000;
-        const speed = chunk / 0.2;
-        const remaining = Math.max(0, totalBytes - transferred);
-        const eta = speed > 0 ? remaining / speed : 0;
-
-        const currentFileIdx = Math.min(
-          files.length - 1,
-          Math.floor((transferred / Math.max(1, totalBytes)) * files.length)
-        );
-
-        if (transferred >= totalBytes) {
-          clearInterval(interval);
-          setActiveSession((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  transferredBytes: totalBytes,
-                  status: 'completed',
-                  currentSpeedBytes: 0,
-                  etaSeconds: 0,
-                }
-              : null
-          );
-
-          const newRecords: HistoryRecord[] = files.map((fileItem) => ({
-            id: generateId(),
-            fileName: fileItem.name,
-            fileSize: fileItem.size,
-            fileType: fileItem.type,
-            category: fileItem.category,
-            direction: 'sent',
-            peerName: targetPeer.name,
-            peerAvatar: targetPeer.avatar,
-            timestamp: Date.now(),
-            blobUrl: fileItem.previewUrl,
-          }));
-          setHistoryRecords((prev) => [...newRecords, ...prev]);
-        } else {
-          setActiveSession((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  transferredBytes: transferred,
-                  currentSpeedBytes: speed,
-                  currentFileIndex: currentFileIdx,
-                  elapsedSeconds: Math.floor(elapsed),
-                  etaSeconds: Math.ceil(eta),
-                }
-              : null
-          );
-        }
-      }, 200);
-    }, 600);
-  };
-
-  // Instant Quick Demo Test Trigger
-  const handleTriggerQuickDemo = () => {
-    const demoFiles: FileItem[] = [
-      {
-        id: generateId(),
-        name: 'Video_Liburan_4K_60FPS.mp4',
-        size: 64 * 1024 * 1024,
-        type: 'video/mp4',
-        category: 'video',
-        status: 'pending',
-      },
-      {
-        id: generateId(),
-        name: 'Berkas_Dokumen_Proyek.pdf',
-        size: 18 * 1024 * 1024,
-        type: 'application/pdf',
-        category: 'document',
-        status: 'pending',
-      },
-    ];
-
-    setSelectedFiles(demoFiles);
-
-    const demoProfile = getRandomDeviceProfile();
-    const demoPeer: Peer = {
-      id: `virtual-${generateId()}`,
-      name: demoProfile.name,
-      avatar: demoProfile.avatar,
-      deviceType: 'mobile',
-      roomCode,
-      wifiBand: '5 GHz',
-      signalStrength: 5,
-      distanceLevel: 1,
-    };
-
-    setPeers((prev) => [demoPeer, ...prev.filter((p) => !p.id.startsWith('virtual-'))]);
-    setSelectedPeer(demoPeer);
-
-    simulateVirtualTransfer(demoPeer, demoFiles);
   };
 
   // Incoming Request responses
@@ -1098,8 +930,6 @@ export default function App() {
               connectingPeerIds={connectingPeerIds}
               onSelectPeer={(p) => {
                 setSelectedPeer(p);
-                // Loopback/virtual are single-device diagnostics — don't trigger pairing.
-                if (p.id.startsWith('loopback-') || p.id.startsWith('virtual-')) return;
                 // Bluetooth-style: tapping a connected/paired device that isn't yet
                 // connected immediately fires the "Terima Perangkat" prompt on the RECEIVER.
                 if (!connectedPeerIds.includes(p.id)) {
