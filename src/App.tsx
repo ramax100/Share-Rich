@@ -576,7 +576,33 @@ export default function App() {
         prev.some((p) => p.id === targetPeerId) ? prev : [pairedPeer, ...prev]
       );
       setSelectedPeer((prev) => (prev?.id === targetPeerId ? prev : pairedPeer));
-      rtcManagerRef.current?.connectToPeer(targetPeerId);
+
+      // Auto-connect to the scanned/remembered receiver. Keep the status HONEST: while we try
+      // the card shows "Menghubung…", it turns green "Terhubung" ONLY once the DataChannel truly
+      // opens (onPeerConnected / a pre-existing open channel), and if the receiver is unreachable
+      // we clear the connecting state so the card settles on a neutral "Siap kirim" — it never
+      // hangs in "Menghubung…" and never shows a false green "Terhubung".
+      const connectName = pairedPeer.name;
+      markPeerConnecting(targetPeerId, connectName);
+      const connectPromise = rtcManagerRef.current?.connectToPeer(targetPeerId);
+      if (connectPromise && typeof connectPromise.then === 'function') {
+        connectPromise
+          .then((conn) => {
+            // Stop the spinner whatever the outcome. If a real channel exists it may already
+            // have cleared it via onPeerConnected; ensure it's gone either way.
+            resolvePeerConnecting(targetPeerId);
+            if (conn) {
+              // Channel open (either just negotiated or already open) → honestly "Terhubung".
+              setConnectedPeerIds((prev) => (prev.includes(targetPeerId) ? prev : [...prev, targetPeerId]));
+            } else {
+              // Never opened → the peer is unreachable right now. Leave it as "Siap kirim",
+              // remove any stale green, and inform the user instead of silently hanging.
+              setConnectedPeerIds((prev) => prev.filter((id) => id !== targetPeerId));
+              showConnToast(`Tidak dapat terhubung ke ${connectName}. Perangkat penerima mungkin tidak aktif.`, 'info');
+            }
+          })
+          .catch(() => resolvePeerConnecting(targetPeerId));
+      }
     }
   };
 
