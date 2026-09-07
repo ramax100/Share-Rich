@@ -172,3 +172,48 @@ export function resetDeviceIdentity(): void {
     // ignore (e.g. storage disabled)
   }
 }
+
+// ---------------------------------------------------------------------------
+// Known peer-profile cache.
+//
+// Problem: after a QR scan / shared link, the URL keeps `?peer=<id>`. On a refresh the
+// deep-link re-creates a *placeholder* card named "Perangkat <last5>" (e.g. "Perangkat KURQD")
+// until discovery re-broadcasts the receiver's real profile. If that broadcast is slow (or
+// the receiver isn't currently on the radar), the placeholder name sticks.
+//
+// To keep the REAL name/avatar across refreshes we remember every peer we've learnt a real
+// (anime) profile for, keyed by peer id, and reuse it when building the placeholder.
+// NOTE: this is a UI/data key separate from the six identity keys, so resetDeviceIdentity()
+// intentionally does NOT clear it (it describes OTHER devices, not this device's identity).
+// ---------------------------------------------------------------------------
+const PEER_PROFILES_KEY = 'shareit_peer_profiles';
+
+type KnownPeerProfile = { name?: string; avatar?: string };
+
+export function getKnownPeerProfile(peerId: string): KnownPeerProfile | null {
+  try {
+    const raw = localStorage.getItem(PEER_PROFILES_KEY);
+    if (!raw) return null;
+    const map = JSON.parse(raw) as Record<string, KnownPeerProfile>;
+    return map[peerId] || null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveKnownPeerProfile(peerId: string, profile: KnownPeerProfile): void {
+  if (!peerId) return;
+  try {
+    const raw = localStorage.getItem(PEER_PROFILES_KEY);
+    const map = raw ? (JSON.parse(raw) as Record<string, KnownPeerProfile>) : {};
+    const current = map[peerId] || {};
+    // Only overwrite with meaningful, non-empty values so a stale/generic record
+    // ("Perangkat ...", empty avatar) never clobbers a real one.
+    if (profile.name && profile.name !== '') current.name = profile.name;
+    if (profile.avatar) current.avatar = profile.avatar;
+    map[peerId] = current;
+    localStorage.setItem(PEER_PROFILES_KEY, JSON.stringify(map));
+  } catch {
+    // ignore (storage disabled / quota)
+  }
+}

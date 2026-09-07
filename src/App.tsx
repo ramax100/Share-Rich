@@ -24,6 +24,8 @@ import {
   resetDeviceIdentity,
   formatBytes,
   detectFileCategory,
+  getKnownPeerProfile,
+  saveKnownPeerProfile,
 } from './utils/helpers';
 import { ANIME_AVATAR_IDS } from './components/AnimeAvatar';
 import { WebRTCManager } from './utils/webrtc';
@@ -31,6 +33,12 @@ import { WebRTCManager } from './utils/webrtc';
 // Is `avatar` a real, known anime profile id? (e.g. 'anime:nino', not undefined/'📱').
 const REAL_AVATAR_IDS = new Set<string>(ANIME_AVATAR_IDS as readonly string[]);
 const isRealAnimeAvatar = (avatar?: string) => !!avatar && REAL_AVATAR_IDS.has(avatar);
+
+// True for the neutral fallback name we generate for a QR/link-paired peer that hasn't been
+// resolved yet, e.g. "Perangkat KURQD" (from the last 5 chars of the id). We never cache these
+// because they carry no real identity and would otherwise overwrite a real name.
+const PLACEHOLDER_NAME_RE = /^Perangkat [A-Z0-9]{2,}$/i;
+const isPlaceholderName = (name?: string | null) => !!name && PLACEHOLDER_NAME_RE.test(name);
 
 // Merge an incoming registry list with the current peers, keyed by id, so a device's REAL
 // avatar & name are preserved whenever an incoming record is missing a value or carries a
@@ -48,6 +56,20 @@ const mergePeerList = (prev: Peer[], incoming: Peer[]): Peer[] => {
     }
     return normalized;
   });
+};
+
+// Remember a REAL profile (a real name — i.e. not the "Perangkat ..." placeholder — and a
+// real avatar when present) so a later refresh can restore it instead of showing the
+// placeholder. Cached entries are only overwritten with meaningful values, so a generic
+// avatar ('') never clobbers a previously-known real one. Kept out of mergePeerList because
+// that runs inside a setState updater, which must stay side-effect free.
+const cacheKnownPeerProfiles = (list: Peer[]): void => {
+  for (const peer of list) {
+    const name = normalizeAnimeDeviceName(peer.name);
+    if (name && !isPlaceholderName(name)) {
+      saveKnownPeerProfile(peer.id, { name, avatar: peer.avatar });
+    }
+  }
 };
 
 
@@ -269,6 +291,7 @@ export default function App() {
         // MERGE (not replace) so a device's real avatar & name are never lost/downgraded
         // when the registry re-broadcasts a list (this is what made a profile "swap" to a
         // different avatar — e.g. Nino -> Ichika — after a network refresh/re-order).
+        cacheKnownPeerProfiles(newPeers);
         setPeers((prev) => mergePeerList(prev, newPeers));
       },
       // A live DeviceChannel dropped: clear the "Terhubung" state and notify the user.
@@ -529,16 +552,20 @@ export default function App() {
 
     if (targetPeerId) {
       // Surface the QR/code-paired receiver as a selectable device card, and select it.
-      // IMPORTANT: use a NEUTRAL placeholder (empty avatar → the 🌸 glyph). We do NOT
-      // hardcode a specific anime profile (e.g. 'anime:ichika') here, because the
-      // receiver's real profile only becomes known once the P2P handshake arrives.
-      // Hardcoding an anime caused the "Penerima aktif" / duel to show a wrong profile
-      // (Ichika) after a refresh. Once the handshake lands, the selectedPeer sync + the
-      // duel's resolveLivePeer replace this placeholder with the receiver's real profile.
+      // IMPORTANT: use a NEUTRAL placeholder (empty avatar → the 🌸 glyph) ONLY when we have
+      // never seen the receiver's real profile. We do NOT hardcode a specific anime profile
+      // (e.g. 'anime:ichika') because the receiver's real profile only becomes known once the
+      // P2P handshake / discovery arrives. Hardcoding an anime caused the "Penerima aktif" /
+      // duel to show a wrong profile (Ichika) after a refresh.
+      //
+      // However, if we HAVE previously learnt this peer's real profile (cached in
+      // localStorage), reuse it immediately so a page refresh does NOT drop the real name and
+      // show an anonymous "Perangkat KURQD" placeholder while discovery re-runs.
+      const known = getKnownPeerProfile(targetPeerId);
       const pairedPeer: Peer = {
         id: targetPeerId,
-        name: `Perangkat ${targetPeerId.slice(-5).toUpperCase()}`,
-        avatar: '',
+        name: known?.name || `Perangkat ${targetPeerId.slice(-5).toUpperCase()}`,
+        avatar: known?.avatar || '',
         deviceType: 'mobile',
         roomCode: newRoom,
         wifiBand: '5 GHz',
