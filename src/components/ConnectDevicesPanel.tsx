@@ -83,17 +83,9 @@ export const ConnectDevicesPanel: React.FC<ConnectDevicesPanelProps> = ({
                         : 'border-slate-200 bg-white hover:border-pink-200'
                 }`}
               >
-                {/* Avatar */}
+                {/* Avatar (transparent, no colored box) */}
                 <div className="relative shrink-0">
-                  <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl text-xl ${
-                      isConnected
-                        ? 'bg-emerald-100 ring-2 ring-emerald-300/60'
-                        : isConnecting
-                          ? 'bg-amber-100 ring-2 ring-amber-300/50'
-                          : 'bg-white ring-1 ring-slate-200'
-                    }`}
-                  >
+                  <div className="flex h-11 w-11 items-center justify-center text-xl">
                     <AnimeAvatar avatar={peer.avatar} size={42} />
                   </div>
                   {isConnected && (

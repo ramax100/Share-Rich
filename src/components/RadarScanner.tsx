@@ -81,13 +81,10 @@ export const RadarScanner: React.FC<RadarScannerProps> = ({
         })()}
 
         <div className="relative z-10 flex flex-col items-center text-center">
-          <div className="relative">
-            <div className="absolute -inset-3 rounded-full bg-pink-500/25 blur-xl" />
-            <div className="relative flex h-20 w-20 items-center justify-center rounded-[1.75rem] border border-pink-200 bg-white text-4xl shadow-xl shadow-pink-100">
-              <AnimeAvatar avatar={currentPeer.avatar} size={74} />
-            </div>
+          <div className="relative flex h-20 w-20 items-center justify-center text-4xl">
+            <AnimeAvatar avatar={currentPeer.avatar} size={74} />
           </div>
-          <p className="mt-3 max-w-[190px] truncate text-sm font-black text-white">{currentPeer.name}</p>
+          <p className="mt-3 max-w-[190px] truncate text-sm font-black text-slate-900">{currentPeer.name}</p>
           <p className="mt-1 rounded-full border border-pink-400/20 bg-pink-400/10 px-2.5 py-1 text-[10px] font-bold text-pink-600">
             Perangkat ini siap
           </p>
@@ -123,15 +120,7 @@ export const RadarScanner: React.FC<RadarScannerProps> = ({
                 {isConnecting && (
                   <div className="absolute -inset-1.5 rounded-2xl bg-amber-300/25 blur-md" />
                 )}
-                <div
-                  className={`relative flex h-11 w-11 items-center justify-center rounded-xl text-xl ${
-                    isConnected
-                      ? 'bg-emerald-500/25 ring-2 ring-emerald-300/60'
-                      : isConnecting
-                        ? 'bg-amber-500/20 ring-2 ring-amber-300/50'
-                        : 'bg-white/10 ring-1 ring-white/10'
-                  }`}
-                >
+                <div className="relative flex h-11 w-11 items-center justify-center text-xl">
                   <AnimeAvatar avatar={peer.avatar} size={42} />
                 </div>
                 {isConnected && (
@@ -201,7 +190,7 @@ export const RadarScanner: React.FC<RadarScannerProps> = ({
             const isConnected = connectedPeerIds.includes(selectedPeer.id);
             return (
               <div className={`mt-3 flex items-center gap-3 rounded-2xl border p-3 ${isConnected ? 'border-emerald-400/30 bg-emerald-500/10' : 'border-pink-400/25 bg-pink-400/10'}`}>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${isConnected ? 'bg-emerald-500/20 ring-1 ring-emerald-400/40' : 'bg-pink-500/20'}`}>
+                <div className="flex h-10 w-10 items-center justify-center text-xl">
                   <AnimeAvatar avatar={selectedPeer.avatar} size={38} />
                 </div>
                 <div className="min-w-0 flex-1">

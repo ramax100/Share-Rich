@@ -34,11 +34,11 @@ export const AcceptDeviceDialog: React.FC<AcceptDeviceDialogProps> = ({
         {/* Device Profile Header */}
         <div className="flex items-center gap-3 pb-4 border-b border-emerald-100">
           <div className="relative">
-            <div className="w-14 h-14 rounded-2xl bg-emerald-500 flex items-center justify-center text-3xl shadow-lg shadow-emerald-500/20">
+            <div className="flex h-14 w-14 items-center justify-center text-3xl">
               <AnimeAvatar avatar={peer.avatar} size={54} />
             </div>
-            <div className="absolute -bottom-1 -right-1 p-1 bg-emerald-500 rounded-full ring-2 ring-white">
-              <Wifi className="w-2.5 h-2.5 text-white" />
+            <div className="absolute -bottom-1 -right-1 rounded-full bg-emerald-500 p-1 ring-2 ring-white">
+              <Wifi className="h-2.5 w-2.5 text-white" />
             </div>
           </div>
 

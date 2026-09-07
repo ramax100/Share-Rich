@@ -97,7 +97,7 @@ export const FilePicker: React.FC<FilePickerProps> = ({
       {selectedPeer && (
         <div className="flex items-center justify-between gap-3 rounded-3xl border border-cyan-200 bg-cyan-50 p-4">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-100 text-2xl"><AnimeAvatar avatar={selectedPeer.avatar} size={40} /></div>
+            <div className="flex h-11 w-11 items-center justify-center text-2xl"><AnimeAvatar avatar={selectedPeer.avatar} size={40} /></div>
             <div className="min-w-0">
               <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-600">Penerima aktif</p>
               <p className="truncate text-sm font-black text-slate-900">{selectedPeer.name}</p>
