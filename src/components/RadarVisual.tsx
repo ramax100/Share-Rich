@@ -9,6 +9,10 @@ interface RadarVisualProps {
   selectedPeer: Peer | null;
   connectedPeerIds: string[];
   connectingPeerIds: string[];
+  // Fired when the user taps a peer's avatar in the radar so they can (re)connect a device
+  // that isn't connected yet. Kept optional so the radar stays purely visual where it's
+  // rendered without a connect handler.
+  onSelectPeer?: (peer: Peer) => void;
 }
 
 // Simple deterministic PRNG so each device gets a STABLE position (no jitter on re-render,
@@ -42,6 +46,7 @@ export const RadarVisual: React.FC<RadarVisualProps> = ({
   selectedPeer,
   connectedPeerIds = [],
   connectingPeerIds = [],
+  onSelectPeer,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(0);
@@ -100,22 +105,35 @@ export const RadarVisual: React.FC<RadarVisualProps> = ({
       {sortedPeers.map((peer, idx) => {
         const isConnected = connectedPeerIds.includes(peer.id);
         const isConnecting = connectingPeerIds.includes(peer.id) && !isConnected;
+        // A device that isn't connected yet can be tapped to (re)connect. We keep the avatar
+        // positions/order static and only toggle interactivity, so a tap never swaps avatars.
+        const canReconnect = !!onSelectPeer && !isConnected;
         const pos = positionFor(hashString(peer.id), idx, half);
 
         return (
           <div
             key={peer.id}
             id={`radar-visual-peer-${peer.id}`}
-            className="pointer-events-none absolute left-1/2 top-1/2 z-20 flex flex-col items-center text-center"
+            className={`absolute left-1/2 top-1/2 z-20 flex flex-col items-center text-center ${
+              canReconnect ? 'pointer-events-auto cursor-pointer' : 'pointer-events-none'
+            }`}
             style={{ transform: `translate(-50%, -50%) translate(${pos.x}px, ${pos.y}px)` }}
+            onClick={canReconnect ? () => onSelectPeer?.(peer) : undefined}
+            title={canReconnect ? 'Klik untuk menghubungkan ulang' : undefined}
+            role={canReconnect ? 'button' : undefined}
+            tabIndex={canReconnect ? 0 : -1}
+            onKeyDown={canReconnect ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectPeer?.(peer); } } : undefined}
           >
             <div className="relative flex flex-col items-center">
-              {/* Transparent avatar — no background box, no pink glow */}
-              <AnimeAvatar
-                avatar={peer.avatar}
-                size={avatarSize}
-                className="relative drop-shadow-[0_6px_16px_rgba(0,0,0,0.35)]"
-              />
+              {/* Transparent avatar — no background box, no pink glow. A subtle hover ring is
+                  shown only as a click affordance for a peer that isn't connected yet. */}
+              <div className={canReconnect ? 'rounded-full transition hover:ring-2 hover:ring-pink-300' : undefined}>
+                <AnimeAvatar
+                  avatar={peer.avatar}
+                  size={avatarSize}
+                  className="relative drop-shadow-[0_6px_16px_rgba(0,0,0,0.35)]"
+                />
+              </div>
               {isConnected && (
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-400 text-slate-950">
                   <Check className="h-2.5 w-2.5" strokeWidth={4} />
@@ -132,6 +150,11 @@ export const RadarVisual: React.FC<RadarVisualProps> = ({
               {isConnected && (
                 <span className="mt-0.5 text-[10px] font-bold text-emerald-600">
                   Terhubung
+                </span>
+              )}
+              {canReconnect && !isConnecting && (
+                <span className="mt-0.5 rounded-full border border-pink-200 bg-pink-50 px-1.5 py-0.5 text-[9px] font-bold text-pink-500">
+                  Klik hubungkan
                 </span>
               )}
             </div>

@@ -260,6 +260,19 @@ export default function App() {
     setConnectingPeerIds((prev) => prev.filter((id) => id !== peerId));
   };
 
+  // Shared "tap a device" handler: select it and, if it isn't connected yet, fire the
+  // Bluetooth-style pairing prompt on the RECEIVER (and show "Menghubungkan…" here). Used by
+  // both the connected-devices list and the radar avatars, so clicking a peer in either place
+  // reconnects a not-yet-connected device.
+  const handleSelectPeer = (peer: Peer) => {
+    setSelectedPeer(peer);
+    if (!connectedPeerIds.includes(peer.id)) {
+      markPeerConnecting(peer.id, peer.name);
+      showConnToast(`Menghubungkan ke ${peer.name}…`, 'info');
+    }
+    rtcManagerRef.current?.sendConnectRequest(peer);
+  };
+
   const triggerAutoDownload = (blobUrl: string, fileName: string) => {
     try {
       const safeName = fileName || 'file-transfer';
@@ -975,22 +988,14 @@ export default function App() {
               selectedPeer={selectedPeer}
               connectedPeerIds={connectedPeerIds}
               connectingPeerIds={connectingPeerIds}
+              onSelectPeer={handleSelectPeer}
             />
             <ConnectDevicesPanel
               peers={peers}
               selectedPeer={selectedPeer}
               connectedPeerIds={connectedPeerIds}
               connectingPeerIds={connectingPeerIds}
-              onSelectPeer={(p) => {
-                setSelectedPeer(p);
-                // Bluetooth-style: tapping a connected/paired device that isn't yet
-                // connected immediately fires the "Terima Perangkat" prompt on the RECEIVER.
-                if (!connectedPeerIds.includes(p.id)) {
-                  markPeerConnecting(p.id, p.name);
-                  showConnToast(`Menghubungkan ke ${p.name}…`, 'info');
-                }
-                rtcManagerRef.current?.sendConnectRequest(p);
-              }}
+              onSelectPeer={handleSelectPeer}
             />
 
           </div>
